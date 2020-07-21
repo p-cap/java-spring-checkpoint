@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class Checkpoint {
 
@@ -49,5 +52,30 @@ public class Checkpoint {
         }
         return newOriginal;
     }//end of redact class
+
+    //This is working perfectly
+    @PostMapping("/encode")
+    public char[] encodeText (
+          @RequestParam(name = "message") String message,
+          @RequestParam(name= "key") String key
+    ) {
+        Map<Character, Character> encode = new HashMap<>();
+        String alphabet = "abcdefghijklmnopqrstuvwzyz";
+        char[] encodedCharText = message.toCharArray();
+
+        //building the key with the alphabet
+        for (int i = 0; i < key.length(); i++){
+            encode.put(alphabet.charAt(i), key.charAt(i));
+        }
+
+        for (int j = 0; j < message.length(); j++){
+            if (message.charAt(j) == ' ' ){
+                continue;
+            } else {
+                encodedCharText[j] = encode.get(encodedCharText[j]);
+            }
+        }
+        return encodedCharText;
+    }
 }
 
